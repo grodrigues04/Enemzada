@@ -1,0 +1,15 @@
+{
+	"name": "enemzada",
+	"version": "1.0.0",
+	"type": "module",
+	"description": "Projeto dedicado a ajudar pessoas que buscam por uma plataforma gratuita de qualidade para seus estudos com enem",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^5.2.1"
+	}
+}
