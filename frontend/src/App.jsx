@@ -22,8 +22,10 @@ function App() {
 						path="/inicio"
 						element={<Home />}
 					/>
-				</Routes>
-				<Routes>
+					<Route
+						path="/"
+						element={<Home />}
+					/>
 					<Route
 						path="/questoes"
 						element={<Questions />}
