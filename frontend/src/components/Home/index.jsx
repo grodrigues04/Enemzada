@@ -23,7 +23,6 @@ export default function Home() {
 
 	return (
 		<Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-			<NavBar />
 			<Paper
 				sx={{
 					p: { xs: 3, md: 4 },
