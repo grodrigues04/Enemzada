@@ -1,5 +1,4 @@
 import { useState } from 'react';
-// import { useRouterState } from '@tanstack/react-router';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
@@ -15,9 +14,9 @@ import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
 import SchoolIcon from '@mui/icons-material/School';
 import BoltIcon from '@mui/icons-material/Bolt';
-// import { useApp } from '../store'
+import { Link } from 'react-router-dom';
 
-const LINKS = [
+const pages = [
 	{ to: '/', rotulo: 'Início' },
 	{ to: '/questoes', rotulo: 'Questões' },
 	{ to: '/simulados', rotulo: 'Simulados' },
@@ -27,9 +26,6 @@ const LINKS = [
 
 export default function NavBar() {
 	const [aberto, setAberto] = useState(false);
-	// const caminho = useRouterState({ select: (s) => s.location.pathname });
-
-	// const ativo = (to) => (to === '/' ? caminho === '/' : caminho.startsWith(to));
 
 	return (
 		<AppBar
@@ -66,20 +62,20 @@ export default function NavBar() {
 					component="nav"
 					sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, flexGrow: 1 }}
 				>
-					{LINKS.map((l) => (
-						<Button
-							key={l.to}
-							// component={Link}
-							to={l.to}
-							// aria-current={ativo(l.to) ? 'page' : undefined}
-							sx={{
-								// color: ativo(l.to) ? 'primary.main' : 'text.secondary',
-								// bgcolor: ativo(l.to) ? 'action.hover' : 'transparent',
-								px: 1.75
-							}}
-						>
-							{l.rotulo}
-						</Button>
+					{pages.map((l) => (
+						<Link to={l.to}>
+							<Button
+								to={l.to}
+								sx={{
+									color: 'primary.main',
+									bgcolor: 'action.hover',
+									px: 1.75,
+									borderRadius: 3
+								}}
+							>
+								{l.rotulo}
+							</Button>
+						</Link>
 					))}
 				</Box>
 
@@ -93,7 +89,6 @@ export default function NavBar() {
 					sx={{ fontWeight: 700 }}
 				/>
 				<Avatar
-					// component={Link}
 					to="/perfil"
 					sx={{ bgcolor: 'primary.light', width: 36, height: 36, fontSize: 14, textDecoration: 'none' }}
 				>
@@ -120,12 +115,10 @@ export default function NavBar() {
 					onClick={() => setAberto(false)}
 				>
 					<List>
-						{LINKS.map((l) => (
+						{pages.map((l) => (
 							<ListItemButton
 								key={l.to}
-								// component={Link}
 								to={l.to}
-								// selected={ativo(l.to)}
 							>
 								<ListItemText primary={l.rotulo} />
 							</ListItemButton>
