@@ -143,6 +143,7 @@ export default function NavBar() {
 						{pages.map((l) => (
 							<ListItemButton
 								key={l.to}
+								component={Link}
 								to={l.to}
 							>
 								<ListItemText primary={l.rotulo} />

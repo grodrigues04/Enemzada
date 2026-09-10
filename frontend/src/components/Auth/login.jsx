@@ -12,7 +12,7 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import SchoolIcon from '@mui/icons-material/School';
 
-const urlBackend = (import.meta.env.VITE_URL_BACKEND ?? '').replace(/\/+$/, '');
+const urlBackend = (import.meta.env.VITE_URL_BACKEND ?? import.meta.env.URL_BACKEND ?? '').replace(/\/+$/, '');
 
 export default function Login() {
 	const navigate = useNavigate();
