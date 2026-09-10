@@ -8,6 +8,8 @@ import NavBar from './components/core/navBar.jsx';
 import Ranking from './components/PracticeExame/index.jsx';
 import Profile from './components/Profile/index.jsx';
 import Footer from './components/core/footer.jsx';
+import Cadastro from './components/Auth/cadastro.jsx';
+import Login from './components/Auth/login.jsx';
 function App() {
 	return (
 		<BrowserRouter>
@@ -58,6 +60,14 @@ function App() {
 						<Route
 							path="/perfil"
 							element={<Profile />}
+						/>
+						<Route
+							path="/cadastro"
+							element={<Cadastro />}
+						/>
+						<Route
+							path="/login"
+							element={<Login />}
 						/>
 						<Route
 							path="*"

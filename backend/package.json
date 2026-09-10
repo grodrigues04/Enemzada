@@ -3,13 +3,18 @@
 	"version": "1.0.0",
 	"type": "module",
 	"description": "Projeto dedicado a ajudar pessoas que buscam por uma plataforma gratuita de qualidade para seus estudos com enem",
-	"main": "index.js",
+	"main": "server.js",
 	"scripts": {
+		"start": "node server.js",
+		"dev": "node --watch server.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"express": "^5.2.1"
+		"bcryptjs": "^3.0.3",
+		"dotenv": "^17.4.2",
+		"express": "^5.2.1",
+		"mongoose": "^8.24.4"
 	}
 }
