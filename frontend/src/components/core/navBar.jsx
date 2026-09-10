@@ -35,19 +35,28 @@ export default function NavBar() {
 			elevation={0}
 			sx={{ borderBottom: '1px solid', borderColor: 'divider', bgcolor: 'background.paper' }}
 		>
-			<Toolbar sx={{ gap: 1, maxWidth: 1200, width: '100%', mx: 'auto', px: { xs: 2, md: 3 } }}>
+			<Toolbar
+				sx={{
+					gap: 1,
+					minHeight: { xs: 52, md: 56 },
+					maxWidth: 1200,
+					width: '100%',
+					mx: 'auto',
+					px: { xs: 2, sm: 3, md: 4 }
+				}}
+			>
 				<Box
 					// component={Link}
 					to="/"
-					sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', mr: 2 }}
+					sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', mr: 1.5, flexShrink: 0 }}
 					aria-label="ENENZADA"
 				>
-					<Avatar sx={{ bgcolor: 'primary.main', width: 36, height: 36 }}>
+					<Avatar sx={{ bgcolor: 'primary.main', width: 32, height: 32 }}>
 						<SchoolIcon fontSize="small" />
 					</Avatar>
 					<Typography
 						variant="h6"
-						sx={{ color: 'text.primary', letterSpacing: -0.5 }}
+						sx={{ color: 'text.primary', letterSpacing: -0.5, fontSize: { xs: 20, md: 22 }, whiteSpace: 'nowrap' }}
 					>
 						Enem
 						<Box
@@ -61,17 +70,23 @@ export default function NavBar() {
 
 				<Box
 					component="nav"
-					sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, flexGrow: 1 }}
+					sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, flexGrow: 1, minWidth: 0 }}
 				>
 					{pages.map((l) => (
-						<Link to={l.to}>
+						<Link
+							key={l.to}
+							to={l.to}
+						>
 							<Button
 								to={l.to}
+								size="small"
 								sx={{
 									color: 'primary.main',
 									bgcolor: 'action.hover',
-									px: 1.75,
-									borderRadius: 3
+									px: 1.5,
+									py: 0.5,
+									borderRadius: 3,
+									whiteSpace: 'nowrap'
 								}}
 							>
 								{l.rotulo}
@@ -86,18 +101,27 @@ export default function NavBar() {
 					icon={<BoltIcon />}
 					color="secondary"
 					variant="outlined"
+					size="small"
 					label={`gustavo 90 pts`}
-					sx={{ fontWeight: 700 }}
+					sx={{ fontWeight: 700, display: { xs: 'none', sm: 'inline-flex' }, flexShrink: 0 }}
 				/>
 				<Avatar
 					to="/perfil"
-					sx={{ bgcolor: 'primary.light', width: 36, height: 36, fontSize: 14, textDecoration: 'none' }}
+					sx={{
+						bgcolor: 'primary.light',
+						width: 32,
+						height: 32,
+						fontSize: 13,
+						textDecoration: 'none',
+						display: { xs: 'none', md: 'inline-flex' }
+					}}
 				>
 					gbr
 				</Avatar>
 
 				<IconButton
 					onClick={() => aberto.value = true}
+					size="small"
 					sx={{ display: { md: 'none' } }}
 					aria-label="Abrir menu de navegação"
 				>

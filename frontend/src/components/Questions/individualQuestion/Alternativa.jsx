@@ -160,7 +160,6 @@ export default function Alternativas({ id }) {
 			selecionada.value = null;
 			try {
 				const { data } = await axios.get(`https://api.enem.dev/v1/exams/${ano}/questions/${indice}`);
-				console.log('Data', data);
 				if (ativo) questao.value = data;
 			} catch {
 				if (ativo) erro.value = 'Não foi possível carregar esta questão. Tente novamente em instantes.';

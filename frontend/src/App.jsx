@@ -18,58 +18,54 @@ function App() {
 					minHeight: '100vh'
 				}}
 			>
+				<NavBar />
+
 				<Box
+					component="main"
 					sx={{
-						width: '65%',
-						maxWidth: '1400px',
-						margin: '0 auto',
 						flex: 1,
+						minHeight: 0,
+						width: '100%',
+						maxWidth: 1200,
+						mx: 'auto',
+						px: { xs: 2, sm: 3, md: 4 },
+						pb: { xs: 3, md: 4 },
 						display: 'flex',
 						flexDirection: 'column'
 					}}
 				>
-					<NavBar />
-
-					<Box
-						component="main"
-						sx={{
-							flex: 1,
-							minHeight: 0,
-							pb: 4
-						}}
-					>
-						<Routes>
-							<Route
-								path="/inicio"
-								element={<Home />}
-							/>
-							<Route
-								path="/"
-								element={<Home />}
-							/>
-							<Route
-								path="/questoes"
-								element={<Pesquisa />}
-							/>
-							<Route
-								path="/questoes/:id"
-								element={<Questao />}
-							/>
-							<Route
-								path="/ranking"
-								element={<Ranking />}
-							/>
-							<Route
-								path="/perfil"
-								element={<Profile />}
-							/>
-							<Route
-								path="*"
-								element={<Box sx={{ py: 6, textAlign: 'center' }}>Página não encontrada.</Box>}
-							/>
-						</Routes>
-					</Box>
+					<Routes>
+						<Route
+							path="/inicio"
+							element={<Home />}
+						/>
+						<Route
+							path="/"
+							element={<Home />}
+						/>
+						<Route
+							path="/questoes"
+							element={<Pesquisa />}
+						/>
+						<Route
+							path="/questoes/:id"
+							element={<Questao />}
+						/>
+						<Route
+							path="/ranking"
+							element={<Ranking />}
+						/>
+						<Route
+							path="/perfil"
+							element={<Profile />}
+						/>
+						<Route
+							path="*"
+							element={<Box sx={{ py: 6, textAlign: 'center' }}>Página não encontrada.</Box>}
+						/>
+					</Routes>
 				</Box>
+
 				<Footer />
 			</Box>
 		</BrowserRouter>

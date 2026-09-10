@@ -24,11 +24,13 @@ export default function Footer() {
 		>
 			<Container
 				maxWidth="lg"
+				disableGutters
 				sx={{
 					height: '100%',
 					display: 'flex',
 					alignItems: 'center',
-					py: 0
+					py: 0,
+					px: { xs: 2, sm: 3, md: 4 }
 				}}
 			>
 				<Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 0.25 }}>
