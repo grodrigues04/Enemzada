@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Home from './components/Home/index.jsx';
 import Pesquisa from './components/Questions/pesquisa.jsx';
+import Questao from './components/Questions/questao.jsx';
 import Box from '@mui/material/Box';
 import NavBar from './components/core/navBar.jsx';
 import Ranking from './components/PracticeExame/index.jsx';
@@ -49,6 +50,10 @@ function App() {
 							<Route
 								path="/questoes"
 								element={<Pesquisa />}
+							/>
+							<Route
+								path="/questoes/:id"
+								element={<Questao />}
 							/>
 							<Route
 								path="/ranking"

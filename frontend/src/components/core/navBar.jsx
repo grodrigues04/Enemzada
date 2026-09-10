@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useSignals, useSignal } from '@preact/signals-react/runtime';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
@@ -25,7 +25,8 @@ const pages = [
 ];
 
 export default function NavBar() {
-	const [aberto, setAberto] = useState(false);
+	useSignals();
+	const aberto = useSignal(false);
 
 	return (
 		<AppBar
@@ -96,7 +97,7 @@ export default function NavBar() {
 				</Avatar>
 
 				<IconButton
-					onClick={() => setAberto(true)}
+					onClick={() => aberto.value = true}
 					sx={{ display: { md: 'none' } }}
 					aria-label="Abrir menu de navegação"
 				>
@@ -106,13 +107,13 @@ export default function NavBar() {
 
 			<Drawer
 				anchor="right"
-				open={aberto}
-				onClose={() => setAberto(false)}
+				open={aberto.value}
+				onClose={() => aberto.value = false}
 			>
 				<Box
 					sx={{ width: 240 }}
 					role="presentation"
-					onClick={() => setAberto(false)}
+					onClick={() => aberto.value = false}
 				>
 					<List>
 						{pages.map((l) => (

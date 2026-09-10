@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
@@ -16,8 +17,8 @@ export default function QuestionCard({ questao, estado }) {
 	return (
 		<Card>
 			<CardActionArea
-				to="/questoes/$id"
-				params={{ id: questao.id }}
+				component={Link}
+				to={`/questoes/${questao.id}`}
 			>
 				<CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1.25 }}>
 					<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75, alignItems: 'center' }}>

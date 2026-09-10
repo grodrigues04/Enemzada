@@ -13,7 +13,6 @@ import AdSlot from '../core/adSlot.jsx';
 import { NIVEIS } from '../../data';
 
 export default function Profile() {
-	// const { usuario } = useApp();
 	const nivelAtual = { nome: 'Platina', nivelAtual: 30 };
 	const proximo = NIVEIS[NIVEIS.indexOf(nivelAtual) + 1];
 	// const progressoNivel = proximo ? ((usuario.pontos - nivelAtual.pontosMin) / (proximo.pontosMin - nivelAtual.pontosMin)) * 100 : 100;

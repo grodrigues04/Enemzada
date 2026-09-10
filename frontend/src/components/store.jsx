@@ -1,8 +1,8 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { signal, computed } from '@preact/signals-react';
 import { QUESTOES, nivelPorPontos } from '../data';
 
-// Estado local de demonstração (sem backend). Tudo vive em memória.
-const AppContext = createContext(null);
+// Estado global de demonstração (sem backend) usando signals.
+// Basta trocar as funções abaixo por chamadas fetch mantendo o mesmo formato de objeto.
 
 function estadoInicialQuestoes() {
 	const mapa = {};
@@ -16,65 +16,55 @@ function estadoInicialQuestoes() {
 	return mapa;
 }
 
-export function AppProvider({ children }) {
-	const [questoes, setQuestoes] = useState(estadoInicialQuestoes);
-	const [pontos, setPontos] = useState(320);
-	const [resolvidasSemana, setResolvidasSemana] = useState(81);
+export const questoes = signal(estadoInicialQuestoes());
+export const pontos = signal(320);
+export const resolvidasSemana = signal(81);
 
-	const valor = useMemo(() => {
-		const usuario = { nome: 'Você', iniciais: 'VC', pontos, nivel: nivelPorPontos(pontos) };
+export const usuario = computed(() => ({
+	nome: 'Você',
+	iniciais: 'VC',
+	pontos: pontos.value,
+	nivel: nivelPorPontos(pontos.value)
+}));
 
-		function atualizar(id, mudanca) {
-			setQuestoes((atual) => ({ ...atual, [id]: { ...atual[id], ...mudanca(atual[id]) } }));
-		}
-
-		return {
-			usuario,
-			questoes,
-			resolvidasSemana,
-			responderQuestao(id, letra) {
-				atualizar(id, () => ({ respondida: letra }));
-				setResolvidasSemana((n) => n + 1);
-			},
-			votarResolucao(id, resolucaoId) {
-				atualizar(id, (q) => ({
-					resolucoes: q.resolucoes.map((r) =>
-						r.id === resolucaoId ? { ...r, votos: r.votos + (r.meuVoto ? -1 : 1), meuVoto: !r.meuVoto } : r
-					)
-				}));
-			},
-			publicarResolucao(id, texto) {
-				atualizar(id, (q) => ({
-					resolucoes: [...q.resolucoes, { id: `r-${Date.now()}`, autor: 'Você', votos: 1, texto, meuVoto: true }]
-				}));
-				setPontos((p) => p + 15);
-			},
-			publicarDuvida(id, texto) {
-				atualizar(id, (q) => ({
-					comentarios: [...q.comentarios, { id: `c-${Date.now()}`, autor: 'Você', texto, respostas: [] }]
-				}));
-			},
-			responderDuvida(id, comentarioId, texto) {
-				atualizar(id, (q) => ({
-					comentarios: q.comentarios.map((c) =>
-						c.id === comentarioId
-							? {
-									...c,
-									respostas: [...c.respostas, { id: `cr-${Date.now()}`, autor: 'Você', texto }]
-								}
-							: c
-					)
-				}));
-				setPontos((p) => p + 10);
-			}
-		};
-	}, [questoes, pontos, resolvidasSemana]);
-
-	return <AppContext.Provider value={valor}>{children}</AppContext.Provider>;
+function atualizar(id, mudanca) {
+	const atual = questoes.value[id] ?? { resolucoes: [], comentarios: [], respondida: null };
+	questoes.value = { ...questoes.value, [id]: { ...atual, ...mudanca(atual) } };
 }
 
-export function useApp() {
-	const ctx = useContext(AppContext);
-	if (!ctx) throw new Error('useApp precisa estar dentro de AppProvider');
-	return ctx;
+export function responderQuestao(id, letra) {
+	atualizar(id, () => ({ respondida: letra }));
+	resolvidasSemana.value += 1;
+}
+
+export function votarResolucao(id, resolucaoId) {
+	atualizar(id, (q) => ({
+		resolucoes: q.resolucoes.map((r) =>
+			r.id === resolucaoId ? { ...r, votos: r.votos + (r.meuVoto ? -1 : 1), meuVoto: !r.meuVoto } : r
+		)
+	}));
+}
+
+export function publicarResolucao(id, texto) {
+	atualizar(id, (q) => ({
+		resolucoes: [...q.resolucoes, { id: `r-${Date.now()}`, autor: 'Você', votos: 1, texto, meuVoto: true }]
+	}));
+	pontos.value += 15;
+}
+
+export function publicarDuvida(id, texto) {
+	atualizar(id, (q) => ({
+		comentarios: [...q.comentarios, { id: `c-${Date.now()}`, autor: 'Você', texto, respostas: [] }]
+	}));
+}
+
+export function responderDuvida(id, comentarioId, texto) {
+	atualizar(id, (q) => ({
+		comentarios: q.comentarios.map((c) =>
+			c.id === comentarioId
+				? { ...c, respostas: [...c.respostas, { id: `cr-${Date.now()}`, autor: 'Você', texto }] }
+				: c
+		)
+	}));
+	pontos.value += 10;
 }
