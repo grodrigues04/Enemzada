@@ -95,6 +95,7 @@ export default function Alternativas({ id }) {
 	const carregando = useSignal(true);
 	const erro = useSignal(null);
 	const selecionada = useSignal(null);
+	const imagem = useSignal([]);
 
 	const [ano, indice] = String(id).split('-');
 
@@ -106,6 +107,7 @@ export default function Alternativas({ id }) {
 			selecionada.value = null;
 			try {
 				const { data } = await axios.get(`https://api.enem.dev/v1/exams/${ano}/questions/${indice}`);
+				console.log('Data fetched:', data); // Debugging line to check the fetched data
 				if (ativo) questao.value = data;
 			} catch {
 				if (ativo) erro.value = 'Não foi possível carregar esta questão. Tente novamente em instantes.';
@@ -135,7 +137,7 @@ export default function Alternativas({ id }) {
 	const disciplina = NOME_POR_DISCIPLINA[questao.value.discipline] ?? questao.value.discipline ?? 'Sem disciplina';
 	const respondida = questoes.value[id]?.respondida;
 	const acertou = respondida === questao.value.correctAlternative;
-
+	imagem.value = questao.value.files;
 	return (
 		<Card>
 			<CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -169,8 +171,21 @@ export default function Alternativas({ id }) {
 				>
 					{questao.value.title}
 				</Typography>
-				{questao.value.context && <Typography sx={{ lineHeight: 1.75 }}>{questao.value.context}</Typography>}
-				{questao.value.alternativesIntroduction && <Typography sx={{ lineHeight: 1.75 }}>{questao.value.alternativesIntroduction}</Typography>}
+				{}
+				{imagem.value.length < 0 && questao.value.context && <Typography sx={{ lineHeight: 1.75 }}>{questao.value.context}</Typography>}
+				{imagem.value.length > 0 &&
+					imagem.value.map((img, index) => (
+						<Box
+							key={index}
+							component="img"
+							src={img}
+							alt={`Imagem ${index + 1}`}
+							sx={{ maxWidth: '100%', maxHeight: '100%', borderRadius: 1 }}
+						/>
+					))}
+				{questao.value.alternativesIntroduction && (
+					<Typography sx={{ lineHeight: 1.75 }}>{questao.value.alternativesIntroduction}</Typography>
+				)}
 
 				<Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.25 }}>
 					{questao.value.alternatives.map((alt) => (
@@ -180,7 +195,7 @@ export default function Alternativas({ id }) {
 							selecionada={selecionada.value === alt.letter || respondida === alt.letter}
 							respondida={respondida}
 							correta={questao.value.correctAlternative}
-							onSelect={() => selecionada.value = alt.letter}
+							onSelect={() => (selecionada.value = alt.letter)}
 						/>
 					))}
 				</Box>
