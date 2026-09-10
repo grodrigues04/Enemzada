@@ -28,6 +28,60 @@ const NOME_POR_DISCIPLINA = {
 	'ciencias-natureza': 'Ciências da Natureza'
 };
 
+function resolverImagem(url, arquivos, ano, indice) {
+	if (/^https?:\/\//.test(url)) return url;
+	const nome = url.split('/').pop();
+	const correspondente = arquivos?.find((f) => f.endsWith(`/${nome}`) || f === url);
+	if (correspondente) return correspondente;
+	return `https://enem.dev/${ano}/questions/${indice}/${nome}`;
+}
+
+function renderMarkdownInline(texto) {
+	const partes = [];
+	const regex = /(\*\*[^*]+\*\*)|(^|[^A-Za-z0-9À-ÿ])(_([^_]+)_)(?=$|[^A-Za-z0-9À-ÿ])/g;
+	let restante = texto;
+	let m;
+	let chave = 0;
+	regex.lastIndex = 0;
+	while ((m = regex.exec(restante))) {
+		if (m.index > 0) partes.push(restante.slice(0, m.index));
+		if (m[1] !== undefined) {
+			partes.push(<strong key={`n${chave++}`}>{m[1].slice(2, -2)}</strong>);
+			restante = restante.slice(m.index + m[1].length);
+		} else {
+			if (m[2]) partes.push(m[2]);
+			partes.push(<em key={`i${chave++}`}>{m[4]}</em>);
+			restante = restante.slice(m.index + m[0].length);
+		}
+		regex.lastIndex = 0;
+	}
+	if (restante) partes.push(restante);
+	return partes;
+}
+
+function blocosDoContexto(questao) {
+	const { context, files, year: ano, index } = questao;
+	const blocos = [];
+	const regexImagem = /!\[[^\]]*\]\(([^)]+)\)/g;
+	let restante = context?.trim();
+	let m;
+	regexImagem.lastIndex = 0;
+	while (restante && (m = regexImagem.exec(restante))) {
+		if (m.index > 0) blocos.push({ tipo: 'texto', valor: restante.slice(0, m.index) });
+		blocos.push({ tipo: 'imagem', valor: resolverImagem(m[1], files, ano, index) });
+		restante = restante.slice(m.index + m[0].length);
+		regexImagem.lastIndex = 0;
+	}
+	if (restante?.trim()) blocos.push({ tipo: 'texto', valor: restante });
+
+	const usadas = new Set(blocos.filter((b) => b.tipo === 'imagem').map((b) => b.valor));
+	(files ?? []).forEach((f) => {
+		if (!usadas.has(f)) blocos.push({ tipo: 'imagem', valor: f });
+	});
+
+	return blocos;
+}
+
 function Alternativa({ alt, selecionada, respondida, correta, onSelect }) {
 	let cor = 'divider';
 	let fundo = 'transparent';
@@ -95,7 +149,6 @@ export default function Alternativas({ id }) {
 	const carregando = useSignal(true);
 	const erro = useSignal(null);
 	const selecionada = useSignal(null);
-	const imagem = useSignal([]);
 
 	const [ano, indice] = String(id).split('-');
 
@@ -107,7 +160,7 @@ export default function Alternativas({ id }) {
 			selecionada.value = null;
 			try {
 				const { data } = await axios.get(`https://api.enem.dev/v1/exams/${ano}/questions/${indice}`);
-				console.log('Data fetched:', data); // Debugging line to check the fetched data
+				console.log('Data', data);
 				if (ativo) questao.value = data;
 			} catch {
 				if (ativo) erro.value = 'Não foi possível carregar esta questão. Tente novamente em instantes.';
@@ -137,7 +190,7 @@ export default function Alternativas({ id }) {
 	const disciplina = NOME_POR_DISCIPLINA[questao.value.discipline] ?? questao.value.discipline ?? 'Sem disciplina';
 	const respondida = questoes.value[id]?.respondida;
 	const acertou = respondida === questao.value.correctAlternative;
-	imagem.value = questao.value.files;
+	const blocos = blocosDoContexto(questao.value);
 	return (
 		<Card>
 			<CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -171,18 +224,26 @@ export default function Alternativas({ id }) {
 				>
 					{questao.value.title}
 				</Typography>
-				{}
-				{imagem.value.length < 0 && questao.value.context && <Typography sx={{ lineHeight: 1.75 }}>{questao.value.context}</Typography>}
-				{imagem.value.length > 0 &&
-					imagem.value.map((img, index) => (
+
+				{blocos.map((bloco, indiceBloco) =>
+					bloco.tipo === 'imagem' ? (
 						<Box
-							key={index}
+							key={`img-${indiceBloco}`}
 							component="img"
-							src={img}
-							alt={`Imagem ${index + 1}`}
-							sx={{ maxWidth: '100%', maxHeight: '100%', borderRadius: 1 }}
+							src={bloco.valor}
+							alt={`Imagem do enunciado ${indiceBloco + 1}`}
+							sx={{ maxWidth: '100%', maxHeight: 320, borderRadius: 1, alignSelf: 'center' }}
 						/>
-					))}
+					) : (
+						<Typography
+							key={`txt-${indiceBloco}`}
+							sx={{ lineHeight: 1.75 }}
+						>
+							{renderMarkdownInline(bloco.valor)}
+						</Typography>
+					)
+				)}
+
 				{questao.value.alternativesIntroduction && (
 					<Typography sx={{ lineHeight: 1.75 }}>{questao.value.alternativesIntroduction}</Typography>
 				)}
