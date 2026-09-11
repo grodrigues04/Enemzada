@@ -15,7 +15,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SchoolIcon from '@mui/icons-material/School';
 import BoltIcon from '@mui/icons-material/Bolt';
 import { Link } from 'react-router-dom';
-
+import user from '../../signals/user';
 const pages = [
 	{ to: '/', rotulo: 'Início' },
 	{ to: '/questoes', rotulo: 'Questões' },
@@ -102,9 +102,10 @@ export default function NavBar() {
 					color="secondary"
 					variant="outlined"
 					size="small"
-					label={`gustavo 90 pts`}
+					label={user.value.autenticado ? user.value.nomeCompleto : 'Faça login para ver seus pontos'}
 					sx={{ fontWeight: 700, display: { xs: 'none', sm: 'inline-flex' }, flexShrink: 0 }}
 				/>
+
 				<Avatar
 					to="/perfil"
 					sx={{
@@ -120,7 +121,7 @@ export default function NavBar() {
 				</Avatar>
 
 				<IconButton
-					onClick={() => aberto.value = true}
+					onClick={() => (aberto.value = true)}
 					size="small"
 					sx={{ display: { md: 'none' } }}
 					aria-label="Abrir menu de navegação"
@@ -132,12 +133,12 @@ export default function NavBar() {
 			<Drawer
 				anchor="right"
 				open={aberto.value}
-				onClose={() => aberto.value = false}
+				onClose={() => (aberto.value = false)}
 			>
 				<Box
 					sx={{ width: 240 }}
 					role="presentation"
-					onClick={() => aberto.value = false}
+					onClick={() => (aberto.value = false)}
 				>
 					<List>
 						{pages.map((l) => (

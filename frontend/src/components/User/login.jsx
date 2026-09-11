@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import SchoolIcon from '@mui/icons-material/School';
-
+import user from '../../signals/user';
 const urlBackend = (import.meta.env.VITE_URL_BACKEND ?? import.meta.env.URL_BACKEND ?? '').replace(/\/+$/, '');
 
 export default function Login() {
@@ -31,11 +31,14 @@ export default function Login() {
 		carregando.value = true;
 		erroGeral.value = null;
 		try {
-			await axios.get(`${urlBackend}/usuario/login`, { params: { email: dados.email, senha: dados.senha } });
+			const { data } = await axios.get(`${urlBackend}/usuario/login`, { params: { email: dados.email, senha: dados.senha } });
+			user.value = data;
+			user.value.autenticado = true;
 			navigate('/');
 		} catch (erro) {
 			const resposta = erro?.response?.data;
 			erroGeral.value = resposta?.mensagem ?? 'Não foi possível entrar. Tente novamente.';
+			user.value.autenticado = false;
 		} finally {
 			carregando.value = false;
 		}

@@ -13,6 +13,7 @@ import TimerIcon from '@mui/icons-material/Timer';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import AdSlot from '../core/adSlot.jsx';
 import NavBar from '../core/navBar.jsx';
+import user from '../../signals/user.js';
 import { DISCIPLINAS, PROGRESSO_SEMANAL, QUESTOES, corArea } from '../../data';
 
 export default function Home() {
@@ -20,7 +21,7 @@ export default function Home() {
 	const metaSemana = PROGRESSO_SEMANAL.reduce((s, d) => s + d.meta, 0);
 	const continuar = QUESTOES[0];
 	const maximo = Math.max(...PROGRESSO_SEMANAL.map((d) => d.questoes), 1);
-
+	console.log('user', user.value);
 	return (
 		<Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
 			<Paper

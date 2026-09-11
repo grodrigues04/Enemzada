@@ -8,8 +8,8 @@ import NavBar from './components/core/navBar.jsx';
 import Ranking from './components/PracticeExame/index.jsx';
 import Profile from './components/Profile/index.jsx';
 import Footer from './components/core/footer.jsx';
-import Cadastro from './components/Auth/cadastro.jsx';
-import Login from './components/Auth/login.jsx';
+import Cadastro from './components/User/cadastro.jsx';
+import Login from './components/User/login.jsx';
 function App() {
 	return (
 		<BrowserRouter>
