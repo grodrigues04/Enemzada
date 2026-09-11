@@ -3,7 +3,6 @@ import userSchema from '../esquemas/user.schema.js';
 
 const User = mongoose.model('User', userSchema);
 
-// Camada de acesso ao banco: apenas consultas, sem regras de negócio.
 class UserModel {
 	static encontrarPorEmail(email) {
 		return User.findOne({ email }).select('+senha').lean();
