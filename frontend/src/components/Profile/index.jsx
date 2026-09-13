@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -11,12 +12,18 @@ import Alert from '@mui/material/Alert';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import AdSlot from '../core/adSlot.jsx';
 import { NIVEIS } from '../../data';
-
+import axios from 'axios';
 export default function Profile() {
 	const nivelAtual = { nome: 'Platina', nivelAtual: 30 };
 	const proximo = NIVEIS[NIVEIS.indexOf(nivelAtual) + 1];
-	// const progressoNivel = proximo ? ((usuario.pontos - nivelAtual.pontosMin) / (proximo.pontosMin - nivelAtual.pontosMin)) * 100 : 100;
+	const urlBackend = (import.meta.env.VITE_URL_BACKEND ?? import.meta.env.URL_BACKEND ?? '').replace(/\/+$/, '');
 
+	// const progressoNivel = proximo ? ((usuario.pontos - nivelAtual.pontosMin) / (proximo.pontosMin - nivelAtual.pontosMin)) * 100 : 100;
+	useEffect(() => {
+		const teste = async () => {
+			const response = await axios.get(`${urlBackend}/`);
+		};
+	}, []);
 	return (
 		<Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: '1fr 300px' } }}>
 			<Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>

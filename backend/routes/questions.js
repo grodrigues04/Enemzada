@@ -1,8 +1,8 @@
 import express from 'express';
-import { getUsers } from '../controllers/user.controller.js';
-
+import autenticar from '../api/autenticar.js';
+import { ranking } from '../controllers/questions.controller.js';
 const router = express.Router();
 
-router.get('/users', getUsers);
+router.get('/ranking', autenticar, ranking);
 
 export default router;

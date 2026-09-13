@@ -16,8 +16,15 @@ export async function cadastrar(req, res) {
 export async function login(req, res) {
 	try {
 		const usuario = await UserService.login(req.query.email, req.query.senha);
+		res.cookie('token', usuario.token, {
+			httpOnly: true,
+			secure: false,
+			sameSite: 'lax',
+			maxAge: 60 * 60 * 1000
+		});
 		res.status(200).json(usuario);
 	} catch (erro) {
+		console.error('Ocorreu um erro', erro);
 		res.status(erro.status ?? 500).json({
 			mensagem: erro.message || 'Erro interno ao autenticar usuário.',
 			campos: erro.campos

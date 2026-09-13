@@ -1,8 +1,6 @@
 import { signal, computed } from '@preact/signals-react';
 import { QUESTOES, nivelPorPontos } from '../data';
-
-// Estado global de demonstração (sem backend) usando signals.
-// Basta trocar as funções abaixo por chamadas fetch mantendo o mesmo formato de objeto.
+import user from '../signals/user';
 
 function estadoInicialQuestoes() {
 	const mapa = {};
@@ -33,15 +31,17 @@ function atualizar(id, mudanca) {
 }
 
 export function responderQuestao(id, letra) {
+	if (!user.value.autenticado) {
+		console.log('você precisa estar autenticado');
+		return;
+	}
 	atualizar(id, () => ({ respondida: letra }));
 	resolvidasSemana.value += 1;
 }
 
 export function votarResolucao(id, resolucaoId) {
 	atualizar(id, (q) => ({
-		resolucoes: q.resolucoes.map((r) =>
-			r.id === resolucaoId ? { ...r, votos: r.votos + (r.meuVoto ? -1 : 1), meuVoto: !r.meuVoto } : r
-		)
+		resolucoes: q.resolucoes.map((r) => (r.id === resolucaoId ? { ...r, votos: r.votos + (r.meuVoto ? -1 : 1), meuVoto: !r.meuVoto } : r))
 	}));
 }
 
@@ -61,9 +61,7 @@ export function publicarDuvida(id, texto) {
 export function responderDuvida(id, comentarioId, texto) {
 	atualizar(id, (q) => ({
 		comentarios: q.comentarios.map((c) =>
-			c.id === comentarioId
-				? { ...c, respostas: [...c.respostas, { id: `cr-${Date.now()}`, autor: 'Você', texto }] }
-				: c
+			c.id === comentarioId ? { ...c, respostas: [...c.respostas, { id: `cr-${Date.now()}`, autor: 'Você', texto }] } : c
 		)
 	}));
 	pontos.value += 10;

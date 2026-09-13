@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import UserModel from '../models/user.model.js';
+import jwt from 'jsonwebtoken';
 
 class ServicoErro extends Error {
 	constructor(mensagem, status = 400, campos = null) {
@@ -7,6 +8,10 @@ class ServicoErro extends Error {
 		this.status = status;
 		this.campos = campos;
 	}
+}
+
+function criarToken(usuario) {
+	return jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 }
 
 function cpfValido(cpf) {
@@ -104,8 +109,10 @@ class UserService {
 		if (!usuario || !(await bcrypt.compare(senha, usuario.senha))) {
 			throw new ServicoErro('E-mail ou senha inválidos.', 401);
 		}
-
+		const token = criarToken(usuario);
+		console.log('Token:', token);
 		const { senha: _ignorada, ...dadosPublicos } = usuario;
+		dadosPublicos.token = token;
 		return dadosPublicos;
 	}
 }

@@ -31,7 +31,10 @@ export default function Login() {
 		carregando.value = true;
 		erroGeral.value = null;
 		try {
-			const { data } = await axios.get(`${urlBackend}/usuario/login`, { params: { email: dados.email, senha: dados.senha } });
+			const { data } = await axios.get(`${urlBackend}/usuario/login`, {
+				params: { email: dados.email, senha: dados.senha },
+				withCredentials: true
+			});
 			user.value = data;
 			user.value.autenticado = true;
 			navigate('/');
