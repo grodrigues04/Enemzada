@@ -18,7 +18,7 @@ export async function login(req, res) {
 		const usuario = await UserService.login(req.query.email, req.query.senha);
 		res.cookie('token', usuario.token, {
 			httpOnly: true,
-			secure: false,
+			secure: process.env.SECURE_HTTP === 1 ? true : false,
 			sameSite: 'lax',
 			maxAge: 60 * 60 * 1000
 		});
