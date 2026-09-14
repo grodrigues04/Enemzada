@@ -29,6 +29,15 @@ export const usuario = computed(() => ({
 	nivel: nivelPorPontos(pontos.value)
 }));
 
+export async function restaurarSessao() {
+	try {
+		const { data } = await axios.get(`${urlBackend}/usuario/me`, { withCredentials: true });
+		user.value = { ...data, autenticado: true, respostasSemConta: 0 };
+	} catch {
+		user.value = { autenticado: false, respostasSemConta: 0 };
+	}
+}
+
 function atualizar(id, mudanca) {
 	const atual = questoes.value[id] ?? { resolucoes: [], comentarios: [], respondida: null };
 	questoes.value = { ...questoes.value, [id]: { ...atual, ...mudanca(atual) } };

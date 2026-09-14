@@ -10,7 +10,12 @@ import Profile from './components/Profile/index.jsx';
 import Footer from './components/core/footer.jsx';
 import Cadastro from './components/User/cadastro.jsx';
 import Login from './components/User/login.jsx';
+import { useEffect } from 'react';
+import { restaurarSessao } from './components/store';
 function App() {
+	useEffect(() => {
+		restaurarSessao();
+	}, []);
 	return (
 		<BrowserRouter>
 			<Box

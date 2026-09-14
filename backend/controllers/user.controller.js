@@ -13,6 +13,19 @@ export async function cadastrar(req, res) {
 	}
 }
 
+export async function me(req, res) {
+	try {
+		const usuario = await UserService.buscarPorId(req.usuario.id);
+		res.status(200).json(usuario);
+	} catch (erro) {
+		console.error('Ocorreu um erro', erro);
+		res.status(erro.status ?? 500).json({
+			mensagem: erro.message || 'Erro interno ao buscar usuário.',
+			campos: erro.campos
+		});
+	}
+}
+
 export async function login(req, res) {
 	try {
 		const usuario = await UserService.login(req.query.email, req.query.senha);

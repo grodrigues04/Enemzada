@@ -115,6 +115,17 @@ class UserService {
 		dadosPublicos.token = token;
 		return dadosPublicos;
 	}
+
+	static async buscarPorId(id) {
+		if (!id) {
+			throw new ServicoErro('Usuário não identificado.', 401);
+		}
+		const usuario = await UserModel.encontrarPorId(id);
+		if (!usuario) {
+			throw new ServicoErro('Usuário não encontrado.', 404);
+		}
+		return usuario;
+	}
 }
 
 export default UserService;

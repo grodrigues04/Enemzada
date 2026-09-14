@@ -12,6 +12,10 @@ class UserModel {
 		return User.findOne({ cpf }).lean();
 	}
 
+	static encontrarPorId(id) {
+		return User.findById(id).lean();
+	}
+
 	static criar(dados) {
 		return User.create(dados);
 	}
