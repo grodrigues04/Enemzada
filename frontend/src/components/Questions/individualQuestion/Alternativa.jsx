@@ -266,7 +266,7 @@ export default function Alternativas({ id }) {
 						variant="contained"
 						size="large"
 						disabled={!selecionada.value}
-						onClick={() => responderQuestao(id, selecionada.value)}
+						onClick={() => responderQuestao(id, selecionada.value, selecionada.value === questao.value.correctAlternative)}
 						sx={{ alignSelf: 'flex-start' }}
 					>
 						Responder

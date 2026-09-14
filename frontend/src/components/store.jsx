@@ -1,6 +1,9 @@
 import { signal, computed } from '@preact/signals-react';
+import axios from 'axios';
 import { QUESTOES, nivelPorPontos } from '../data';
 import user from '../signals/user';
+
+const urlBackend = (import.meta.env.VITE_URL_BACKEND ?? import.meta.env.URL_BACKEND ?? '').replace(/\/+$/, '');
 
 function estadoInicialQuestoes() {
 	const mapa = {};
@@ -31,10 +34,25 @@ function atualizar(id, mudanca) {
 	questoes.value = { ...questoes.value, [id]: { ...atual, ...mudanca(atual) } };
 }
 
-export function responderQuestao(id, letra) {
+export function responderQuestao(id, letra, resultado) {
 	if (!user.value.autenticado && user.value.respostasSemConta >= 1) {
 		alertaResposta.value = 'você precisa entrar com uma conta para responder mais questões';
 		return;
+	}
+	if (user.value.autenticado) {
+		const [ano, numero] = String(id).split('-');
+		axios.post(
+			`${urlBackend}/questions/log`,
+			{
+				question: {
+					numero: Number(numero),
+					ano: Number(ano),
+					url: `https://api.enem.dev/v1/exams/${ano}/questions/${numero}`
+				},
+				resultado
+			},
+			{ withCredentials: true }
+		).catch(() => {});
 	}
 	if (!user.value.autenticado) {
 		user.value = { ...user.value, respostasSemConta: (user.value.respostasSemConta ?? 0) + 1 };
