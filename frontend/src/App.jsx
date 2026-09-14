@@ -5,7 +5,7 @@ import Pesquisa from './components/Questions/pesquisa.jsx';
 import Questao from './components/Questions/questao.jsx';
 import Box from '@mui/material/Box';
 import NavBar from './components/core/navBar.jsx';
-import Ranking from './components/PracticeExame/index.jsx';
+import Ranking from './components/Ranking/index.jsx';
 import Profile from './components/Profile/index.jsx';
 import Footer from './components/core/footer.jsx';
 import Cadastro from './components/User/cadastro.jsx';

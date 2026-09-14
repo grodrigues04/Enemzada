@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import { useSignals, useSignal } from '@preact/signals-react/runtime';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import Paper from '@mui/material/Paper';
@@ -11,8 +13,11 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import LinearProgress from '@mui/material/LinearProgress';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+import user from '../../signals/user.js';
 import AdSlot from '../core/adSlot.jsx';
 
 const urlBackend = (import.meta.env.VITE_URL_BACKEND ?? import.meta.env.URL_BACKEND ?? '').replace(/\/+$/, '');
@@ -40,6 +45,10 @@ export default function Ranking() {
 	const lista = useSignal([]);
 
 	useEffect(() => {
+		if (!user.value.autenticado) {
+			carregando.value = false;
+			return;
+		}
 		let ativo = true;
 		async function carregar() {
 			carregando.value = true;
@@ -64,6 +73,55 @@ export default function Ranking() {
 
 	const info = PERIODOS.find((p) => p.valor === aba.value) ?? PERIODOS[0];
 	const lider = lista.value[0];
+
+	if (!user.value.autenticado) {
+		return (
+			<Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+				<Box>
+					<Typography
+						variant="h4"
+						component="h1"
+					>
+						{info.titulo}
+					</Typography>
+					<Typography color="text.secondary">{info.descricao}</Typography>
+				</Box>
+
+				<Card>
+					<CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1.5, textAlign: 'center' }}>
+						<Avatar sx={{ bgcolor: 'primary.main', width: 56, height: 56 }}>
+							<LockOutlinedIcon />
+						</Avatar>
+						<Typography
+							variant="h6"
+							sx={{ fontWeight: 800 }}
+						>
+							Entre para ver o ranking
+						</Typography>
+						<Typography color="text.secondary">Você precisa estar logado para acompanhar quem mais resolveu exercícios.</Typography>
+					</CardContent>
+					<CardActions sx={{ justifyContent: 'center', pb: 2.5, gap: 1 }}>
+						<Button
+							component={Link}
+							to="/login"
+							variant="contained"
+						>
+							Entrar
+						</Button>
+						<Button
+							component={Link}
+							to="/cadastro"
+							variant="outlined"
+						>
+							Criar conta
+						</Button>
+					</CardActions>
+				</Card>
+
+				<AdSlot titulo="Anuncie aqui e apoie estudantes de todo o Brasil" />
+			</Box>
+		);
+	}
 
 	return (
 		<Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -101,9 +159,7 @@ export default function Ranking() {
 
 			{erro.value && <Alert severity="error">{erro.value}</Alert>}
 
-			{!carregando.value && !erro.value && lista.value.length === 0 && (
-				<Alert severity="info">Nenhuma questão resolvida neste período.</Alert>
-			)}
+			{!carregando.value && !erro.value && lista.value.length === 0 && <Alert severity="info">Nenhuma questão resolvida neste período.</Alert>}
 
 			{!carregando.value && lista.value.length > 0 && (
 				<Card>
@@ -120,12 +176,8 @@ export default function Ranking() {
 									borderColor: 'divider'
 								}}
 							>
-								<Typography sx={{ width: 32, fontWeight: 800, color: MEDALHAS[i] || 'text.secondary' }}>
-									{i + 1}º
-								</Typography>
-								<Avatar sx={{ bgcolor: i < 3 ? MEDALHAS[i] : 'grey.300', fontSize: 14 }}>
-									{gerarIniciais(p.nome)}
-								</Avatar>
+								<Typography sx={{ width: 32, fontWeight: 800, color: MEDALHAS[i] || 'text.secondary' }}>{i + 1}º</Typography>
+								<Avatar sx={{ bgcolor: i < 3 ? MEDALHAS[i] : 'grey.300', fontSize: 14 }}>{gerarIniciais(p.nome)}</Avatar>
 								<Box sx={{ flex: 1, minWidth: 0 }}>
 									<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
 										<Typography
