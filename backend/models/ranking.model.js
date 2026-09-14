@@ -6,7 +6,7 @@ const Question = mongoose.models.Question || mongoose.model('Question', question
 class RankingModel {
 	static async contarPorPeriodo(inicio, fim) {
 		return Question.aggregate([
-			{ $match: { 'tentativa.data': { $gte: inicio, $lte: fim } } },
+			{ $match: { 'tentativa.data': { $gte: inicio, $lte: fim }, 'tentativa.resultado': true } },
 			{ $group: { _id: '$id_user', totalQuestoes: { $sum: 1 } } },
 			{ $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'usuario' } },
 			{ $unwind: '$usuario' },
