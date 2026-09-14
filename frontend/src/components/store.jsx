@@ -17,6 +17,7 @@ function estadoInicialQuestoes() {
 export const questoes = signal(estadoInicialQuestoes());
 export const pontos = signal(320);
 export const resolvidasSemana = signal(81);
+export const alertaResposta = signal(null);
 
 export const usuario = computed(() => ({
 	nome: 'Você',
@@ -31,9 +32,12 @@ function atualizar(id, mudanca) {
 }
 
 export function responderQuestao(id, letra) {
-	if (!user.value.autenticado) {
-		console.log('você precisa estar autenticado');
+	if (!user.value.autenticado && user.value.respostasSemConta >= 1) {
+		alertaResposta.value = 'você precisa entrar com uma conta para responder mais questões';
 		return;
+	}
+	if (!user.value.autenticado) {
+		user.value = { ...user.value, respostasSemConta: (user.value.respostasSemConta ?? 0) + 1 };
 	}
 	atualizar(id, () => ({ respondida: letra }));
 	resolvidasSemana.value += 1;

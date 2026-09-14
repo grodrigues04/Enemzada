@@ -9,10 +9,11 @@ import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 import Avatar from '@mui/material/Avatar';
 import CircularProgress from '@mui/material/CircularProgress';
 import { corArea, nomeArea } from '../../../data';
-import { questoes, responderQuestao } from '../../store';
+import { questoes, responderQuestao, alertaResposta } from '../../store';
 
 const AREA_POR_DISCIPLINA = {
 	linguagens: 'linguagens',
@@ -277,6 +278,20 @@ export default function Alternativas({ id }) {
 							: `Não foi dessa vez. A alternativa correta é a ${questao.value.correctAlternative}. Confira as resoluções abaixo.`}
 					</Alert>
 				)}
+
+				<Snackbar
+					open={Boolean(alertaResposta.value)}
+					autoHideDuration={5000}
+					onClose={() => (alertaResposta.value = null)}
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+				>
+					<Alert
+						severity="warning"
+						onClose={() => (alertaResposta.value = null)}
+					>
+						{alertaResposta.value}
+					</Alert>
+				</Snackbar>
 			</CardContent>
 		</Card>
 	);
