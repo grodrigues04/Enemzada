@@ -13,7 +13,6 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import AdSlot from '../core/adSlot';
 import QuestaoCard from '../core/QuestaoCard';
-import { AREAS, DIFICULDADES } from '../../data';
 import { useSignals } from '@preact/signals-react/runtime';
 
 const ANO_INICIAL = 2009;
@@ -24,11 +23,15 @@ const ITENS_POR_PAGINA_OPCOES = [10, 20, 30, 40, 50];
 
 const valoresPadrao = {
 	busca: '',
-	area: 'todas',
+	idioma: 'todas',
 	ano: ANO_FINAL,
-	dificuldade: 'todas',
 	itensPorPagina: 10
 };
+
+const IDIOMAS = [
+	{ valor: 'todas', nome: 'Todos os idiomas' },
+	{ valor: 'espanhol', nome: 'Espanhol' }
+];
 
 export default function Pesquisa() {
 	const { control, handleSubmit, reset, getValues } = useForm({ defaultValues: valoresPadrao });
@@ -53,18 +56,22 @@ export default function Pesquisa() {
 				titulo: `Questão ${q.index}`,
 				enunciado: q.alternativesIntroduction ?? q.context ?? '',
 				disciplina: q.discipline ?? '',
-				area: dados.area === 'todas' ? q.discipline : dados.area,
+				idioma: q.language ?? '',
+				area: q.discipline,
 				ano: dados.ano,
-				dificuldade: dados.dificuldade === 'todas' ? undefined : dados.dificuldade,
 				alternativas: q.alternatives ?? [],
 				correta: q.correctAlternative
 			}));
 
-			const filtradasPorBusca = dados.busca.trim()
-				? resultados.filter((q) => `${q.titulo} ${q.enunciado} ${q.disciplina}`.toLowerCase().includes(dados.busca.toLowerCase()))
-				: resultados;
+			const filtradas = resultados.filter((q) => {
+				const porIdioma = dados.idioma === 'todas' || q.idioma === dados.idioma;
+				const porBusca =
+					!dados.busca.trim() ||
+					`${q.titulo} ${q.enunciado} ${q.disciplina}`.toLowerCase().includes(dados.busca.toLowerCase());
+				return porIdioma && porBusca;
+			});
 
-			questoes.value = offsetAtual === 0 ? filtradasPorBusca : [...questoes.value, ...filtradasPorBusca];
+			questoes.value = offsetAtual === 0 ? filtradas : [...questoes.value, ...filtradas];
 			offset.value = offsetAtual + dados.itensPorPagina + 1;
 			totalEncontrado.value = data?.metadata?.total ?? null;
 			temMais.value = data.metadata.hasMore;
@@ -116,7 +123,7 @@ export default function Pesquisa() {
 					sx={{
 						display: 'grid',
 						gap: 2,
-						gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: '2fr 1fr 1fr 1fr 1fr auto auto' },
+						gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: '2fr 1fr 1fr 1fr auto auto' },
 						alignItems: 'center'
 					}}
 				>
@@ -133,22 +140,21 @@ export default function Pesquisa() {
 					/>
 
 					<Controller
-						name="area"
+						name="idioma"
 						control={control}
 						render={({ field }) => (
 							<TextField
 								{...field}
 								select
-								label="Área"
+								label="Idioma"
 								size="small"
 							>
-								<MenuItem value="todas">Todas as áreas</MenuItem>
-								{AREAS.map((a) => (
+								{IDIOMAS.map((i) => (
 									<MenuItem
-										key={a.id}
-										value={a.id}
+										key={i.valor}
+										value={i.valor}
 									>
-										{a.nome}
+										{i.nome}
 									</MenuItem>
 								))}
 							</TextField>
@@ -174,29 +180,6 @@ export default function Pesquisa() {
 										value={a}
 									>
 										{a}
-									</MenuItem>
-								))}
-							</TextField>
-						)}
-					/>
-
-					<Controller
-						name="dificuldade"
-						control={control}
-						render={({ field }) => (
-							<TextField
-								{...field}
-								select
-								label="Dificuldade"
-								size="small"
-							>
-								<MenuItem value="todas">Todas</MenuItem>
-								{DIFICULDADES.map((d) => (
-									<MenuItem
-										key={d}
-										value={d}
-									>
-										{d}
 									</MenuItem>
 								))}
 							</TextField>
