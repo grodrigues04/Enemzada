@@ -156,7 +156,7 @@ export default function Cadastro() {
 							type="date"
 							variant="outlined"
 							size="small"
-							InputLabelProps={{ shrink: true }}
+							slotProps={{ inputLabel: { shrink: true } }}
 							{...register('dataNascimento', { required: 'Informe a data de nascimento.' })}
 							error={!!errors.dataNascimento}
 							helperText={errors.dataNascimento?.message}

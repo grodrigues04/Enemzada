@@ -15,8 +15,6 @@ const comentarioSchema = new mongoose.Schema(
 	}
 );
 
-// um comentário tem exatamente um alvo: a questão (ambos os ids nulos),
-// uma resolução (id_resolucao preenchido) ou outro comentário (id_comentario_pai preenchido)
 comentarioSchema.index({ id_questao: 1, data: -1 });
 comentarioSchema.index({ id_comentario_pai: 1, data: 1 });
 comentarioSchema.index({ id_resolucao: 1, data: 1 });
