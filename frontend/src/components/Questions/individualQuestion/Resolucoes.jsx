@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useSignals, useSignal } from '@preact/signals-react/runtime';
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
@@ -13,13 +14,17 @@ import Tooltip from '@mui/material/Tooltip';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import { questoes, votarResolucao, publicarResolucao } from '../../store';
+import { questoes, votarResolucao, publicarResolucao, carregarResolucoes } from '../../store';
 
 export default function Resolucoes({ id }) {
 	useSignals();
 	const novaResolucao = useSignal('');
 	const resolucoes = questoes.value[id]?.resolucoes ?? [];
 	const ordenadas = [...resolucoes].sort((a, b) => b.votos - a.votos);
+
+	useEffect(() => {
+		carregarResolucoes(id);
+	}, [id]);
 
 	return (
 		<CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useSignals, useSignal } from '@preact/signals-react/runtime';
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
@@ -7,13 +8,17 @@ import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
-import { questoes, publicarDuvida, responderDuvida } from '../../store';
+import { questoes, publicarDuvida, responderDuvida, carregarComentarios } from '../../store';
 
 export default function Comentarios({ id }) {
 	useSignals();
 	const novaDuvida = useSignal('');
 	const respostas = useSignal({});
 	const comentarios = questoes.value[id]?.comentarios ?? [];
+
+	useEffect(() => {
+		carregarComentarios(id);
+	}, [id]);
 
 	return (
 		<CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
