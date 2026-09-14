@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useSignals, useSignal } from '@preact/signals-react/runtime';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -12,6 +13,7 @@ import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import Avatar from '@mui/material/Avatar';
 import CircularProgress from '@mui/material/CircularProgress';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { corArea, nomeArea } from '../../../data';
 import { questoes, responderQuestao, alertaResposta } from '../../store';
 
@@ -272,11 +274,25 @@ export default function Alternativas({ id }) {
 						Responder
 					</Button>
 				) : (
-					<Alert severity={acertou ? 'success' : 'error'}>
-						{acertou
-							? 'Boa! Resposta correta. Veja as resoluções para fixar o raciocínio.'
-							: `Não foi dessa vez. A alternativa correta é a ${questao.value.correctAlternative}. Confira as resoluções abaixo.`}
-					</Alert>
+					<Box sx={{ display: 'flex', gap: 1.5, alignItems: { sm: 'center' }, flexDirection: { xs: 'column', sm: 'row' } }}>
+						<Alert
+							severity={acertou ? 'success' : 'error'}
+							sx={{ flex: 1 }}
+						>
+							{acertou
+								? 'Boa! Resposta correta. Veja as resoluções para fixar o raciocínio.'
+								: `Não foi dessa vez. A alternativa correta é a ${questao.value.correctAlternative}. Confira as resoluções abaixo.`}
+						</Alert>
+						<Button
+							component={Link}
+							to={`/questoes/${ano}-${Number(indice) + 1}`}
+							variant="outlined"
+							endIcon={<ArrowForwardIcon />}
+							sx={{ whiteSpace: 'nowrap', flexShrink: 0 }}
+						>
+							Próxima questão
+						</Button>
+					</Box>
 				)}
 
 				<Snackbar
