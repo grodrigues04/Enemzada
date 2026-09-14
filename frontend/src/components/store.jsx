@@ -41,18 +41,20 @@ export function responderQuestao(id, letra, resultado) {
 	}
 	if (user.value.autenticado) {
 		const [ano, numero] = String(id).split('-');
-		axios.post(
-			`${urlBackend}/questions/log`,
-			{
-				question: {
-					numero: Number(numero),
-					ano: Number(ano),
-					url: `https://api.enem.dev/v1/exams/${ano}/questions/${numero}`
+		axios
+			.post(
+				`${urlBackend}/questions/log`,
+				{
+					question: {
+						numero: Number(numero),
+						ano: Number(ano),
+						url: `https://api.enem.dev/v1/exams/${ano}/questions/${numero}`
+					},
+					resultado
 				},
-				resultado
-			},
-			{ withCredentials: true }
-		).catch(() => {});
+				{ withCredentials: true }
+			)
+			.catch(() => {});
 	}
 	if (!user.value.autenticado) {
 		user.value = { ...user.value, respostasSemConta: (user.value.respostasSemConta ?? 0) + 1 };

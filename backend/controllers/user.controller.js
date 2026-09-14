@@ -16,10 +16,11 @@ export async function cadastrar(req, res) {
 export async function login(req, res) {
 	try {
 		const usuario = await UserService.login(req.query.email, req.query.senha);
+		const modoSeguro = process.env.NODE_ENV === 'production' || String(process.env.SECURE_HTTP).trim() === '1';
 		res.cookie('token', usuario.token, {
 			httpOnly: true,
-			secure: process.env.SECURE_HTTP === 1 ? true : false,
-			sameSite: 'lax',
+			secure: modoSeguro,
+			sameSite: modoSeguro ? 'none' : 'lax',
 			maxAge: 60 * 60 * 1000
 		});
 		res.status(200).json(usuario);
