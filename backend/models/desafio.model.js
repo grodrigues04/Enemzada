@@ -18,7 +18,7 @@ class DesafioModel {
 
 	static buscarQuestoesUsadas(idUser) {
 		return Desafio.aggregate([
-			{ $match: { id_user: idUser } },
+			{ $match: { id_user: new mongoose.Types.ObjectId(idUser) } },
 			{ $unwind: '$questions' },
 			{ $project: { _id: 0, year: '$questions.year', questionNumber: '$questions.questionNumber' } }
 		]);

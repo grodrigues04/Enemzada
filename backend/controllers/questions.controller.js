@@ -24,3 +24,15 @@ export async function registrarLog(req, res) {
 		});
 	}
 }
+
+export async function desempenhoSemanal(req, res) {
+	try {
+		const resultado = await QuestionsService.desempenhoSemanal(req.usuario.id);
+		res.status(200).json(resultado);
+	} catch (erro) {
+		res.status(erro.status ?? 500).json({
+			mensagem: erro.message || 'Erro interno ao buscar desempenho semanal.',
+			campos: erro.campos
+		});
+	}
+}

@@ -10,7 +10,7 @@ function estadoInicialQuestoes() {
 	QUESTOES.forEach((q) => {
 		mapa[q.id] = {
 			resolucoes: q.resolucoes.map((r) => ({ ...r, meuVoto: false })),
-			comentarios: q.comentarios.map((c) => ({ ...c, respostas: [...c.respostas] })),
+			comentarios: [],
 			respondida: null
 		};
 	});

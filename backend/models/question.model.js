@@ -19,6 +19,18 @@ class QuestionModel {
 			{ new: true, runValidators: true }
 		).lean();
 	}
+
+	static contarPorDia(idUser, inicio, timezone) {
+		return Question.aggregate([
+			{ $match: { id_user: new mongoose.Types.ObjectId(idUser), 'tentativa.data': { $gte: inicio } } },
+			{
+				$group: {
+					_id: { $dateToString: { format: '%Y-%m-%d', date: '$tentativa.data', timezone } },
+					questoes: { $sum: 1 }
+				}
+			}
+		]);
+	}
 }
 
 export default QuestionModel;

@@ -8,9 +8,45 @@ class ServicoErro extends Error {
 	}
 }
 
+const FUSO = process.env.FUSO_DESAFIO ?? 'America/Sao_Paulo';
+const DIAS_DESEMPENHO = 7;
+const MS_POR_DIA = 24 * 60 * 60 * 1000;
+
+function inicioDoDia(deslocamento = 0) {
+	const agora = new Date(Date.now() + deslocamento * MS_POR_DIA);
+	const partes = new Intl.DateTimeFormat('en-CA', {
+		timeZone: FUSO,
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit'
+	}).formatToParts(agora);
+	const ano = Number(partes.find((p) => p.type === 'year').value);
+	const mes = Number(partes.find((p) => p.type === 'month').value);
+	const dia = Number(partes.find((p) => p.type === 'day').value);
+	return new Date(Date.UTC(ano, mes - 1, dia));
+}
+
 class QuestionsService {
 	static async ranking() {
 		console.log('oi');
+	}
+
+	static async desempenhoSemanal(idUser) {
+		if (!idUser) {
+			throw new ServicoErro('Usuário não identificado.', 401);
+		}
+
+		const inicio = inicioDoDia(-(DIAS_DESEMPENHO - 1));
+		const contagens = await QuestionModel.contarPorDia(idUser, inicio, FUSO);
+		const porDia = new Map(contagens.map((c) => [c._id, c.questoes]));
+
+		const dias = [];
+		for (let i = DIAS_DESEMPENHO - 1; i >= 0; i -= 1) {
+			const data = inicioDoDia(-i).toISOString().slice(0, 10);
+			dias.push({ data, questoes: porDia.get(data) ?? 0 });
+		}
+
+		return { dias };
 	}
 
 	static async logarTentativa(dados = {}) {
