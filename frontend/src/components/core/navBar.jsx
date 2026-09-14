@@ -17,7 +17,6 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import { Link } from 'react-router-dom';
 import user from '../../signals/user';
 const pages = [
-	{ to: '/', rotulo: 'Início' },
 	{ to: '/questoes', rotulo: 'Questões' },
 	{ to: '/simulados', rotulo: 'Simulados' },
 	{ to: '/ranking', rotulo: 'Ranking' },
@@ -46,7 +45,7 @@ export default function NavBar() {
 				}}
 			>
 				<Box
-					// component={Link}
+					component={Link}
 					to="/"
 					sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', mr: 1.5, flexShrink: 0 }}
 					aria-label="ENENZADA"
@@ -97,6 +96,27 @@ export default function NavBar() {
 
 				<Box sx={{ flexGrow: { xs: 1, md: 0 } }} />
 
+				{!user.value.autenticado && (
+					<Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, alignItems: 'center', flexShrink: 0 }}>
+						<Button
+							component={Link}
+							to="/login"
+							size="small"
+							variant="outlined"
+						>
+							Entrar
+						</Button>
+						<Button
+							component={Link}
+							to="/cadastro"
+							size="small"
+							variant="contained"
+						>
+							Criar conta
+						</Button>
+					</Box>
+				)}
+
 				<Chip
 					icon={<BoltIcon />}
 					color="secondary"
@@ -105,20 +125,6 @@ export default function NavBar() {
 					label={user.value.autenticado ? user.value.nomeCompleto : 'Faça login para ver seus pontos'}
 					sx={{ fontWeight: 700, display: { xs: 'none', sm: 'inline-flex' }, flexShrink: 0 }}
 				/>
-
-				<Avatar
-					to="/perfil"
-					sx={{
-						bgcolor: 'primary.light',
-						width: 32,
-						height: 32,
-						fontSize: 13,
-						textDecoration: 'none',
-						display: { xs: 'none', md: 'inline-flex' }
-					}}
-				>
-					gbr
-				</Avatar>
 
 				<IconButton
 					onClick={() => (aberto.value = true)}
@@ -150,6 +156,22 @@ export default function NavBar() {
 								<ListItemText primary={l.rotulo} />
 							</ListItemButton>
 						))}
+						{!user.value.autenticado && (
+							<>
+								<ListItemButton
+									component={Link}
+									to="/login"
+								>
+									<ListItemText primary="Entrar" />
+								</ListItemButton>
+								<ListItemButton
+									component={Link}
+									to="/cadastro"
+								>
+									<ListItemText primary="Criar conta" />
+								</ListItemButton>
+							</>
+						)}
 					</List>
 				</Box>
 			</Drawer>
