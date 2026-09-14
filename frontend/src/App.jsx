@@ -10,6 +10,7 @@ import Profile from './components/Profile/index.jsx';
 import Footer from './components/core/footer.jsx';
 import Cadastro from './components/User/cadastro.jsx';
 import Login from './components/User/login.jsx';
+import DesafioDiario from './components/DesafioDiario/index.jsx';
 import { useEffect } from 'react';
 import { restaurarSessao } from './components/store';
 function App() {
@@ -61,6 +62,10 @@ function App() {
 						<Route
 							path="/ranking"
 							element={<Ranking />}
+						/>
+						<Route
+							path="/desafio-diario"
+							element={<DesafioDiario />}
 						/>
 						<Route
 							path="/perfil"

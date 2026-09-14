@@ -20,12 +20,15 @@ const pages = [
 	{ to: '/questoes', rotulo: 'Questões' },
 	{ to: '/simulados', rotulo: 'Simulados' },
 	{ to: '/ranking', rotulo: 'Ranking' },
+	{ to: '/desafio-diario', rotulo: 'Desafio Diário' },
 	{ to: '/perfil', rotulo: 'Perfil' }
 ];
 
 export default function NavBar() {
 	useSignals();
 	const aberto = useSignal(false);
+
+	const paginasVisiveis = pages.filter((p) => user.value.autenticado || p.to !== '/desafio-diario');
 
 	return (
 		<AppBar
@@ -71,7 +74,7 @@ export default function NavBar() {
 					component="nav"
 					sx={{ display: { xs: 'none', md: 'flex' }, gap: 0.5, flexGrow: 1, minWidth: 0 }}
 				>
-					{pages.map((l) => (
+					{paginasVisiveis.map((l) => (
 						<Link
 							key={l.to}
 							to={l.to}
@@ -147,7 +150,7 @@ export default function NavBar() {
 					onClick={() => (aberto.value = false)}
 				>
 					<List>
-						{pages.map((l) => (
+						{paginasVisiveis.map((l) => (
 							<ListItemButton
 								key={l.to}
 								component={Link}

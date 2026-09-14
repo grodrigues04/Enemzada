@@ -19,6 +19,10 @@ class UserModel {
 	static criar(dados) {
 		return User.create(dados);
 	}
+
+	static atualizarStreak(id, streakDiaria) {
+		return User.findByIdAndUpdate(id, { $set: { streak_diaria: streakDiaria } }, { new: true }).lean();
+	}
 }
 
 export default UserModel;

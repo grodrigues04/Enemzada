@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import userRouter from './routes/user.routes.js';
 import questionRouter from './routes/questions.js';
+import desafioRouter from './routes/desafios.js';
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 });
 app.use('/questions', questionRouter);
 app.use('/usuario', userRouter);
+app.use('/desafio', desafioRouter);
 
 app.use((req, res) => {
 	res.status(404).json({ mensagem: 'Rota não encontrada.' });
