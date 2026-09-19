@@ -6,6 +6,7 @@ import questionRouter from './routes/questions.js';
 import desafioRouter from './routes/desafios.js';
 import resolucoesRouter from './routes/resolucoes.js';
 import comentariosRouter from './routes/comentarios.js';
+import simuladoRouter from './routes/simulado.js';
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use('/usuario', userRouter);
 app.use('/desafio', desafioRouter);
 app.use('/resolucoes', resolucoesRouter);
 app.use('/comentarios', comentariosRouter);
+app.use('/simulado', simuladoRouter);
 
 app.use((req, res) => {
 	res.status(404).json({ mensagem: 'Rota não encontrada.' });

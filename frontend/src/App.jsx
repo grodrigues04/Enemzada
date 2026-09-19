@@ -11,6 +11,8 @@ import Footer from './components/core/footer.jsx';
 import Cadastro from './components/User/cadastro.jsx';
 import Login from './components/User/login.jsx';
 import DesafioDiario from './components/DesafioDiario/index.jsx';
+import Simulados from './components/Simulado/index.jsx';
+import SimuladoExame from './components/Simulado/exame.jsx';
 import { useEffect } from 'react';
 import { restaurarSessao } from './components/store';
 function App() {
@@ -66,6 +68,14 @@ function App() {
 						<Route
 							path="/desafio-diario"
 							element={<DesafioDiario />}
+						/>
+						<Route
+							path="/simulados"
+							element={<Simulados />}
+						/>
+						<Route
+							path="/simulados/:id"
+							element={<SimuladoExame />}
 						/>
 						<Route
 							path="/perfil"

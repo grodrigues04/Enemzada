@@ -28,7 +28,9 @@ export default function NavBar() {
 	useSignals();
 	const aberto = useSignal(false);
 
-	const paginasVisiveis = pages.filter((p) => user.value.autenticado || p.to !== '/desafio-diario');
+	const paginasVisiveis = pages.filter(
+		(p) => user.value.autenticado || (p.to !== '/desafio-diario' && p.to !== '/simulados')
+	);
 
 	return (
 		<AppBar
