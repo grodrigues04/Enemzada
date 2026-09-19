@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 import user from '../../signals/user';
 const pages = [
 	{ to: '/questoes', rotulo: 'Questões' },
-	{ to: '/simulados', rotulo: 'Simulados' },
+	// { to: '/simulados', rotulo: 'Simulados' },
 	{ to: '/ranking', rotulo: 'Ranking' },
 	{ to: '/desafio-diario', rotulo: 'Desafio Diário' },
 	{ to: '/perfil', rotulo: 'Perfil' }
